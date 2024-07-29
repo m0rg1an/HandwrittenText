@@ -118,7 +118,6 @@ for index in range(len(df)):
     x = (pdf_width - new_width) / 2
     y = (pdf_height - new_height) / 2
     
-    img.save(img_path)  # Save the rotated image
     c.drawImage(img_path, x, y, new_width, new_height)
     c.showPage()
 
