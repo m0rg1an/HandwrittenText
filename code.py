@@ -106,6 +106,7 @@ for index in range(len(df)):
     img_path = os.path.join(SAVE_DIR, f'document_{index + 1}.jpeg')
     # Open the image to get its dimensions
     img = Image.open(img_path)
+    img = img.rotate(90, expand=True)  # Rotate the image by 90 degrees
     img_width, img_height = img.size
     
     # Calculate scaling to fit the image within the PDF page
@@ -117,6 +118,7 @@ for index in range(len(df)):
     x = (pdf_width - new_width) / 2
     y = (pdf_height - new_height) / 2
     
+    img.save(img_path)  # Save the rotated image
     c.drawImage(img_path, x, y, new_width, new_height)
     c.showPage()
 
