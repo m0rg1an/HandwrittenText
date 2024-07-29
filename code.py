@@ -115,10 +115,14 @@ for index in range(len(df)):
     new_height = img_height * scaling_factor
     
     # Calculate positions to center the image
-    x = (pdf_width - new_width) / 2
-    y = (pdf_height - new_height) / 2
+    x = (pdf_height - new_width) / 2  # Adjusted to ensure proper centering after rotation
+    y = (pdf_width - new_height) / 2  # Adjusted to ensure proper centering after rotation
     
-    c.drawImage(img_path, x, y, new_width, new_height)
+    c.saveState()
+    c.translate(pdf_width / 2, pdf_height / 2)
+    c.rotate(90)
+    c.drawImage(img_path, -pdf_height / 2, -pdf_width / 2, pdf_height, pdf_width)
+    c.restoreState()
     c.showPage()
 
 c.save()
