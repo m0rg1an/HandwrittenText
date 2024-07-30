@@ -3,7 +3,7 @@ from PIL import Image, ImageDraw, ImageFont
 import os
 import random
 from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import letter
+from reportlab.lib.pagesizes import landscape
 
 # Function to list available fonts and get user selection
 def choose_font(directory):
@@ -29,7 +29,7 @@ def choose_font(directory):
 EXCEL_FILE = 'motivated seller list.xlsx'  # Path to the uploaded Excel file
 SAVE_DIR = 'handwritten_texts'
 FONTS_DIR = 'fonts'  # Directory containing font files
-BACKGROUND_IMAGE = 'bg.png'  # Path to the uploaded background image
+BACKGROUND_IMAGE = 'bg1.png'  # Path to the uploaded background image
 PDF_FILE = os.path.join(SAVE_DIR, 'handwritten_texts.pdf')  # Path to save the PDF
 
 # Create save directory if it doesn't exist
@@ -98,31 +98,29 @@ for index, row in df.iterrows():
 
 print('Handwritten images have been saved.')
 
+# Define new page size
+PAGE_WIDTH, PAGE_HEIGHT = 676.8, 288  # 9.4 inches * 4 inches in points
+
 # Create a PDF with all the images
-c = canvas.Canvas(PDF_FILE, pagesize=letter)
-pdf_width, pdf_height = letter
+c = canvas.Canvas(PDF_FILE, pagesize=(PAGE_WIDTH, PAGE_HEIGHT))
 
 for index in range(len(df)):
     img_path = os.path.join(SAVE_DIR, f'document_{index + 1}.jpeg')
     # Open the image to get its dimensions
     img = Image.open(img_path)
-    img = img.rotate(90, expand=True)  # Rotate the image by 90 degrees
-    img_width, img_height = img.size
     
     # Calculate scaling to fit the image within the PDF page
-    scaling_factor = min(pdf_width / img_width, pdf_height / img_height)
+    img_width, img_height = img.size
+    scaling_factor = min(PAGE_WIDTH / img_width, PAGE_HEIGHT / img_height)
     new_width = img_width * scaling_factor
     new_height = img_height * scaling_factor
     
     # Calculate positions to center the image
-    x = (pdf_height - new_width) / 2  # Adjusted to ensure proper centering after rotation
-    y = (pdf_width - new_height) / 2  # Adjusted to ensure proper centering after rotation
+    x = (PAGE_WIDTH - new_width) / 2
+    y = (PAGE_HEIGHT - new_height) / 2
     
-    c.saveState()
-    c.translate(pdf_width / 2, pdf_height / 2)
-    c.rotate(90)
-    c.drawImage(img_path, -pdf_height / 2, -pdf_width / 2, pdf_height, pdf_width)
-    c.restoreState()
+    # Draw the image on the PDF
+    c.drawImage(img_path, x, y, new_width, new_height)
     c.showPage()
 
 c.save()
