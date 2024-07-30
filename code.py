@@ -29,7 +29,7 @@ def choose_font(directory):
 EXCEL_FILE = 'motivated seller list.xlsx'  # Path to the uploaded Excel file
 SAVE_DIR = 'handwritten_texts'
 FONTS_DIR = 'fonts'  # Directory containing font files
-BACKGROUND_IMAGE = 'bg1.png'  # Path to the uploaded background image
+BACKGROUND_IMAGE = 'bg4.png'  # Path to the uploaded background image
 PDF_FILE = os.path.join(SAVE_DIR, 'handwritten_texts.pdf')  # Path to save the PDF
 
 # Create save directory if it doesn't exist
@@ -44,7 +44,7 @@ df = pd.read_excel(EXCEL_FILE)
 # Function to draw text on an image
 def draw_text(text, file_name, font_path, background_image):
     # Load a font
-    font_size = 90
+    font_size = 35
     font = ImageFont.truetype(font_path, font_size)  # Increased font size for better readability
     
     # Load the background image
@@ -70,7 +70,7 @@ def draw_text(text, file_name, font_path, background_image):
     y_start = (img_height - total_height) // 2
 
     # Initial position for the text
-    x, y = x_start, y_start
+    x, y = x_start, y_start+15
 
     # Draw each line of text with slight variations
     text_color = (0, 0, 139)  # Dark blue color for the text (R, G, B values)
