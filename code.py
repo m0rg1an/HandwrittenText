@@ -29,7 +29,6 @@ def choose_font(directory):
 EXCEL_FILE = 'motivated seller list.xlsx'  # Path to the uploaded Excel file
 SAVE_DIR = 'handwritten_texts'
 FONTS_DIR = 'fonts'  # Directory containing font files
-BACKGROUND_IMAGE = 'bg1.png'  # Path to the uploaded background image
 PDF_FILE = os.path.join(SAVE_DIR, 'handwritten_texts.pdf')  # Path to save the PDF
 
 # Create save directory if it doesn't exist
@@ -41,23 +40,32 @@ FONT_PATH = choose_font(FONTS_DIR)
 # Read Excel file
 df = pd.read_excel(EXCEL_FILE)
 
+# Get the complete address from the user as a single input
+user_full_address = input("Enter the complete address for the top left (e.g., 'John Doe, 1234 Elm St, Springfield, IL 62704'): ")
+
+# Split the user input into lines for placement on the image
+user_address_lines = user_full_address.split(', ')
+user_address_text = "\n".join(user_address_lines)
+
 # Function to draw text on an image
-def draw_text(text, file_name, font_path, background_image):
+def draw_text(text, user_text, file_name, font_path):
     # Load a font
     font_size = 90
     font = ImageFont.truetype(font_path, font_size)  # Increased font size for better readability
     
-    # Load the background image
-    img = Image.open(background_image).convert("RGB")  # Convert to RGB mode
-    img_width, img_height = img.size
+    # Create a white background image
+    img_width, img_height = 2000, 1500  # Define the size of the image
+    img = Image.new('RGB', (img_width, img_height), color = (255, 255, 255))
     d = ImageDraw.Draw(img)
 
     # Split text into lines
     lines = text.split('\n')
+    user_lines = user_text.split('\n')
+    
+    # Calculate the middle position for the main address
     max_line_width = 0
     total_height = 0
     
-    # Calculate the dimensions required for each line
     for line in lines:
         text_bbox = d.textbbox((0, 0), line, font=font)
         line_width = text_bbox[2] - text_bbox[0]
@@ -65,20 +73,35 @@ def draw_text(text, file_name, font_path, background_image):
         max_line_width = max(max_line_width, line_width)
         total_height += line_height + 10  # Adding line spacing
 
-    # Calculate starting x and y positions for centering text
     x_start = (img_width - max_line_width) // 2
     y_start = (img_height - total_height) // 2
 
-    # Initial position for the text
+    # Draw the main address in the center
     x, y = x_start, y_start
-
-    # Draw each line of text with slight variations
     text_color = (0, 0, 139)  # Dark blue color for the text (R, G, B values)
+    
     for line in lines:
-        # Apply random variations to position
-        variation_x = random.randint(-10, 10)
-        variation_y = random.randint(-5, 5)
-        d.text((x + variation_x, y + variation_y), line, font=font, fill=text_color)
+        d.text((x, y), line, font=font, fill=text_color)
+        line_height = d.textbbox((0, 0), line, font=font)[3] - d.textbbox((0, 0), line, font=font)[1]
+        y += line_height + 10
+
+    # Draw the user-provided address in the top left corner
+    max_user_line_width = 0
+    user_total_height = 0
+
+    for line in user_lines:
+        text_bbox = d.textbbox((0, 0), line, font=font)
+        line_width = text_bbox[2] - text_bbox[0]
+        line_height = text_bbox[3] - text_bbox[1]
+        max_user_line_width = max(max_user_line_width, line_width)
+        user_total_height += line_height + 10  # Adding line spacing
+    
+    x_user_start = 50  # Start close to the left edge
+    y_user_start = 50  # Start close to the top edge
+
+    x, y = x_user_start, y_user_start
+    for line in user_lines:
+        d.text((x, y), line, font=font, fill=text_color)
         line_height = d.textbbox((0, 0), line, font=font)[3] - d.textbbox((0, 0), line, font=font)[1]
         y += line_height + 10
 
@@ -94,7 +117,7 @@ for index, row in df.iterrows():
     zip_code = row['Zip']
     text = f"{addressee}\n{address}\n{city}, {state} {zip_code}"
     file_name = f'document_{index + 1}'
-    draw_text(text, file_name, FONT_PATH, BACKGROUND_IMAGE)
+    draw_text(text, user_address_text, file_name, FONT_PATH)
 
 print('Handwritten images have been saved.')
 
