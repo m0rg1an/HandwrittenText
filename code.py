@@ -41,20 +41,23 @@ FONT_PATH = choose_font(FONTS_DIR)
 df = pd.read_excel(EXCEL_FILE)
 
 # Get the complete address from the user as a single input
-user_full_address = input("Enter the complete address for the top left (e.g., 'John Doe, 1234 Elm St, Springfield, IL 62704'): ")
+# user_full_address = input("Enter the complete address for the top left (e.g., 'John Doe, 1234 Elm St, Springfield, IL 62704'): ")
+user_full_address = "Morgan Iacolucci, 1653 21st Ave, Seattle, WA 98122"
 
 # Split the user input into lines for placement on the image
 user_address_lines = user_full_address.split(', ')
 user_address_text = "\n".join(user_address_lines)
 
+img_width, img_height = 2031, 864 
+
 # Function to draw text on an image
 def draw_text(text, user_text, file_name, font_path):
     # Load a font
-    font_size = 90
+    font_size = 50
     font = ImageFont.truetype(font_path, font_size)  # Increased font size for better readability
     
     # Create a white background image
-    img_width, img_height = 2000, 1500  # Define the size of the image
+    # img_width, img_height = 677, 288 #2000, 1500  # Define the size of the image
     img = Image.new('RGB', (img_width, img_height), color = (255, 255, 255))
     d = ImageDraw.Draw(img)
 
@@ -74,7 +77,7 @@ def draw_text(text, user_text, file_name, font_path):
         total_height += line_height + 10  # Adding line spacing
 
     x_start = (img_width - max_line_width) // 2
-    y_start = (img_height - total_height) // 2
+    y_start = ((img_height - total_height) // 2)*1.2
 
     # Draw the main address in the center
     x, y = x_start, y_start
@@ -122,7 +125,8 @@ for index, row in df.iterrows():
 print('Handwritten images have been saved.')
 
 # Define new page size
-PAGE_WIDTH, PAGE_HEIGHT = 676.8, 288  # 9.4 inches * 4 inches in points
+# PAGE_WIDTH, PAGE_HEIGHT = 676.8, 288  # 9.4 inches * 4 inches in points
+PAGE_WIDTH, PAGE_HEIGHT = img_width/3, img_height/3
 
 # Create a PDF with all the images
 c = canvas.Canvas(PDF_FILE, pagesize=(PAGE_WIDTH, PAGE_HEIGHT))
@@ -134,9 +138,10 @@ for index in range(len(df)):
     
     # Calculate scaling to fit the image within the PDF page
     img_width, img_height = img.size
-    scaling_factor = min(PAGE_WIDTH / img_width, PAGE_HEIGHT / img_height)
-    new_width = img_width * scaling_factor
-    new_height = img_height * scaling_factor
+    #scaling_factor = min(PAGE_WIDTH / img_width, PAGE_HEIGHT / img_height)
+    scaling_factor = 3
+    new_width = img_width / scaling_factor
+    new_height = img_height / scaling_factor
     
     # Calculate positions to center the image
     x = (PAGE_WIDTH - new_width) / 2
