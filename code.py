@@ -55,7 +55,7 @@ img_width, img_height = 1390, 760
 # Function to draw text on an image
 def draw_text(text, user_text, file_name, font_path):
     # Load a font
-    font_size = 70
+    font_size = 65
     font = ImageFont.truetype(font_path, font_size)  # Increased font size for better readability
     
     # Create a white background image
@@ -69,8 +69,8 @@ def draw_text(text, user_text, file_name, font_path):
     
     
     # Calculate the middle position for the main address
-    max_line_width = 0
-    total_height = -100
+    max_line_width = 10
+    total_height = -45
     
     for line in lines:
         text_bbox = d.textbbox((0, 0), line, font=font)
@@ -79,7 +79,7 @@ def draw_text(text, user_text, file_name, font_path):
         max_line_width = max(max_line_width, line_width)
         total_height += line_height + 10  # Adding line spacing
 
-    x_start = (img_width - max_line_width) // 2
+    x_start = (img_width - max_line_width) // 2 + 35
     y_start = ((img_height - total_height) // 2)*1.2
 
     # Draw the main address in the center
@@ -102,8 +102,8 @@ def draw_text(text, user_text, file_name, font_path):
         max_user_line_width = max(max_user_line_width, line_width)
         user_total_height += line_height + 10  # Adding line spacing
     
-    x_user_start = 20  # Start close to the left edge
-    y_user_start = 125  # Start close to the top edge
+    x_user_start = 152  # Start close to the left edge
+    y_user_start = 75  # Start close to the top edge
 
     x, y = x_user_start, y_user_start
     for line in user_lines:
