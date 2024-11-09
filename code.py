@@ -42,14 +42,15 @@ df = pd.read_excel(EXCEL_FILE)
 
 # Get the complete address from the user as a single input
 # user_full_address = input("Enter the complete address for the top left (e.g., 'John Doe, 1234 Elm St, Springfield, IL 62704'): ")
-user_full_address = "Morgan Iacolucci, 1653 21st Ave, Seattle, WA 98122"
+user_full_address = "Mo Iacolucci, 1653 21st Ave, Seattle, WA 98122"
 
 # Split the user input into lines for placement on the image
 user_address_lines = user_full_address.split(', ')
-user_address_text = f"{'Morgan Iacolucci'}\n{'1653 21st ave'}\n{'Seattle'}, {'WA'} {'98122'}"
+user_address_text = f"{'Mo Iacolucci'}\n{'1653 21st ave'}\n{'Seattle'}, {'WA'} {'98122'}"
 #user_address_text = "\n".join(user_address_lines)
 
-img_width, img_height = 2031, 864 
+img_width, img_height = 1390, 760
+#2031, 864 
 
 # Function to draw text on an image
 def draw_text(text, user_text, file_name, font_path):
@@ -69,7 +70,7 @@ def draw_text(text, user_text, file_name, font_path):
     
     # Calculate the middle position for the main address
     max_line_width = 0
-    total_height = 0
+    total_height = -100
     
     for line in lines:
         text_bbox = d.textbbox((0, 0), line, font=font)
@@ -101,8 +102,8 @@ def draw_text(text, user_text, file_name, font_path):
         max_user_line_width = max(max_user_line_width, line_width)
         user_total_height += line_height + 10  # Adding line spacing
     
-    x_user_start = 50  # Start close to the left edge
-    y_user_start = 50  # Start close to the top edge
+    x_user_start = 20  # Start close to the left edge
+    y_user_start = 125  # Start close to the top edge
 
     x, y = x_user_start, y_user_start
     for line in user_lines:
