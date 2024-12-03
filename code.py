@@ -42,11 +42,11 @@ df = pd.read_excel(EXCEL_FILE)
 
 # Get the complete address from the user as a single input
 # user_full_address = input("Enter the complete address for the top left (e.g., 'John Doe, 1234 Elm St, Springfield, IL 62704'): ")
-user_full_address = "Mo Iacolucci, 1653 21st Ave, Seattle, WA 98122"
+user_full_address = "Mo, 1653 21st Ave, Seattle, WA 98122"
 
 # Split the user input into lines for placement on the image
 user_address_lines = user_full_address.split(', ')
-user_address_text = f"{'Mo Iacolucci'}\n{'1653 21st ave'}\n{'Seattle'}, {'WA'} {'98122'}"
+user_address_text = f"{'Mo'}\n{'1653 21st ave'}\n{'Seattle'}, {'WA'} {'98122'}"
 #user_address_text = "\n".join(user_address_lines)
 
 img_width, img_height = 1390, 760
@@ -55,7 +55,7 @@ img_width, img_height = 1390, 760
 # Function to draw text on an image
 def draw_text(text, user_text, file_name, font_path):
     # Load a font
-    font_size = 65
+    font_size = 49
     font = ImageFont.truetype(font_path, font_size)  # Increased font size for better readability
     
     # Create a white background image
