@@ -55,7 +55,7 @@ img_width, img_height = 1390, 760
 # Function to draw text on an image
 def draw_text(text, user_text, file_name, font_path):
     # Load a font
-    font_size = 65
+    font_size = 50
     font = ImageFont.truetype(font_path, font_size)  # Increased font size for better readability
     
     # Create a white background image
